@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy.n.Healthy</title>
+    <style>
+        body {
+            background-color: #FFFFCE;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #userInput {
+            width: 500px;
+        }
+        #submissions {
+            margin-top: 20px;
+        }
+        .submission {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px 0;
+        }
+    </style>
+    <script>
+        const moods = [':(', ':/', ':|', ':)', ':D']; // mimics character in app concept
+        const messages = ["You really should eat more healthy diet if you don't want to be plagued by illnesses later on in lif :(",
+        'Eat more healthy food mate you can do it!',
+        'Getting there! Try and eat a more healthy diet!',
+        'Nice work keep it up :P',
+        'Yay you are eating very healthily!']; // slightly informal messages for motivation to eat healthily consistently
+        let totalScore = 0; // for calculating overall mood later on
+        let totalSubmissions = 0;
+        function calculateScore() {
+            totalSubmissions += 1;
+            // these scores are calculated based on portion suggestions provided by the chatbot
+            const carbs = parseInt(document.getElementById('carbs').value); // score from carbohydrate category
+            let score1 = 0;
+            if (carbs >= 3 && carbs <= 5) {
+                score1 += 2;
+            } else if (carbs >= 2 && carbs <= 6) {
+                score1++;
+            } else if (carbs == 0 || carbs >= 7) {
+                score1--;
+            }
+            const vegs = parseInt(document.getElementById('vegs').value); // score from fruit & veg category
+            let score2 = 0;
+            if (vegs >= 5) {
+                score2 += 2;
+            } else if (vegs >= 4) {
+                score2++;
+            } else if (carbs == 0) {
+                score2--;
+            }
+            const proteins = parseInt(document.getElementById('proteins').value); // score from proteins category
+            let score3 = 0;
+            if (proteins >= 2 && proteins <= 3) {
+                score3 += 2;
+            } else if (proteins >= 1 && proteins <= 4) {
+                score3++;
+            } else if (carbs == 0|| carbs >= 6) {
+                score1--;
+            }
+            const snacks = parseInt(document.getElementById('snacks').value); // score from snacks category
+            let score4 = 0;
+            if (snacks >= 5) {
+                score4 -= 2;
+            } else if (score4 >= 3) {
+                score4--;
+            }
+
+            const sum = score1 + score2 + score3 + score4 + 5; // score range = -5 to 6, so add 5 to make it more understandable
+            document.getElementById('score').innerText = "Score: " + sum;
+            if (sum <= 1) {
+                document.getElementById('result').innerText = moods[0];
+                document.getElementById('resultmessage').innerText = messages[0];
+            } else if (sum <= 3) {
+                document.getElementById('result').innerText = moods[1];
+                document.getElementById('resultmessage').innerText = messages[1];
+            } else if (sum <= 6) {
+                document.getElementById('result').innerText = moods[2];
+                document.getElementById('resultmessage').innerText = messages[2];
+            } else if (sum <= 9) {
+                document.getElementById('result').innerText = moods[3];
+                document.getElementById('resultmessage').innerText = messages[3];
+            } else {
+                document.getElementById('result').innerText = moods[4];
+                document.getElementById('resultmessage').innerText = messages[4];
+            }
+            
+            // show submission history
+            const submissionsDiv = document.getElementById('submissions');
+            const submissionDiv = document.createElement('div');
+            const recentlyEntered = 'Carbohydrate portions: ' + String(carbs) + ' ; Fruit & veg portions: ' + String(vegs) + ' ; Protein portions: ' + String(proteins) + ' ; Snack portions: ' + String(snacks);
+            submissionDiv.className = 'submission';
+            submissionDiv.textContent = recentlyEntered;
+            submissionsDiv.prepend(submissionDiv);
+            document.getElementById('scoreForm').reset();
+
+            // show overall character mood and message
+            totalScore = Math.round((totalScore + sum) / totalSubmissions); // calculate average score
+            if (totalScore <= 1) {
+                document.getElementById('overallResult').innerText = moods[0];
+                document.getElementById('overallMessage').innerText = messages[0];
+            } else if (totalScore <= 3) {
+                document.getElementById('overallResult').innerText = moods[1];
+                document.getElementById('overallMessage').innerText = messages[1];
+            } else if (totalScore <= 6) {
+                document.getElementById('overallResult').innerText = moods[2];
+                document.getElementById('overallMessage').innerText = messages[2];
+            } else if (totalScore <= 9) {
+                document.getElementById('overallResult').innerText = moods[3];
+                document.getElementById('overallMessage').innerText = messages[3];
+            } else {
+                document.getElementById('overallResult').innerText = moods[4];
+                document.getElementById('overallMessage').innerText = messages[4];
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1 style="text-align: center">Happy.n.Healthy</h1>
+    <h2>How healthily have you been eating recently?</h2>
+    <h3 id="overallResult"></h3>
+    <p id="overallMessage"></p>
+    <h2>Enter meal details:</h2>
+    <form id="scoreForm">
+        <label for="carbs"><b>Portions of carbohydrates eaten:</b></label>
+        <select id="carbs">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+        <p>Healthy carbohydrates include foods like rice and oats. Don't confuse them with carbohydrates in unhealthy foods like soft drinks!<br>
+            A portion of carbohydrates is around the size of your fist.</p>
+
+        <label for="vegs"><b>Portions of fruits & vegetables eaten:</b></label>
+        <select id="vegs">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+        <p>Vegetables and fruits include foods like lettuce and apples.<br>
+            A portion of these is about 80 grams, so it's around the weight of 1 apple or 3 tablespoons of cooked vegetables.</p>
+
+        <label for="proteins"><b>Portions of proteins eaten:</b></label>
+        <select id="proteins">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+        <p>Proteins include foods like meat and eggs. For vegetarians or vegans, protein subtitutes can also include beans or tofu.
+            <br>A portion of proteins is roughly the size of your palm.</p>
+
+        <label for="snacks"><b>Portions of snacks eaten:</b></label>
+        <select id="snacks">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+        <p>Snacks include foods like crisps and sweets. If you're eating the other type of snacks (eg. yoghurt/nuts), count those in their respective categories instead!
+            <br>A portion of snacks is roughly the size of 1 packet of crisps, but it varies quite a bit depending on their type.</p>
+        <button type="button" onclick="calculateScore()">Submit</button>
+    </form>
+
+    <h2>Your result:</h2>
+    <h3 id="result"></h3>
+    <p id="score"></p>
+    <p id="resultmessage"></p>
+    <h2>Recent meals:</h2>
+    <div id="submissions"></div>
+</body>
+</html>
